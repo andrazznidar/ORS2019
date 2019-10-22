@@ -23,16 +23,20 @@ int main ()
 
 int ResetBit(int x, int p)
 {
+    return x &= ~(1UL << p);
 }
 
 int ResetTwoBits(int x, int p)
 {
+    return x &= ~(3UL << p); 
 }
 
 int SetBit(int x, int p)
 {
+    return x|= (1UL << p);
 }
 
 int SetTwoBitsTo(int x, int p, int n)
 {
+    return x & ~(3 << p)|(n << p);
 }
