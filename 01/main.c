@@ -38,5 +38,5 @@ int SetBit(int x, int p)
 
 int SetTwoBitsTo(int x, int p, int n)
 {
-    return x & ~(3 << p)|(n << p);
+    return x & ~(3UL << p)|(n << p);
 }
