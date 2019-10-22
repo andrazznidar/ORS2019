@@ -98,10 +98,12 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // turn on required peripherals
-  // TODO
+  button_port_clock_on();
+  led_port_clock_on();
 
   // init required periphearls
-  // TODO
+  button_init();
+  led_init();
 
   /* USER CODE END 2 */
 
@@ -111,7 +113,15 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    // TODO READ BUTTON AND START LED SEQUENCE
+    if (read_button()==1){
+      for (int i=0; i<4; i++){
+        led_on(i);
+        delay();
+      }
+      for (int i=0; i<4; i++){
+        led_off(i);
+      }
+    }
 
     /* USER CODE BEGIN 3 */
   }
@@ -161,73 +171,102 @@ void SystemClock_Config(void)
 void reset_two_bits(volatile uint32_t *address, uint8_t p)
 {
   // reset two bits (p and p+1) in a 32 bit register
-  // TODO
+  *address = *address &= ~(3UL << p);
 }
 
 void set_bit(volatile uint32_t *address, uint8_t p)
 {
   // set bit p in a 32 bit register
-  // TODO
+  *address = *address |= (1UL << p);
 }
 
 void set_bit_16(volatile uint16_t *address, uint8_t p)
 {
   // set bit p in a 16 bit register
-  // TODO
+  *address |= (1 << p);
 }
 
 void set_two_bits_to(volatile uint32_t *address, uint8_t p, uint8_t n)
 {
   // set two bits (p and p+1) to value n in a 32 bit register
-  // TODO
+  *address = (*address & ~(3 << p))|(n << p);
 }
 
 void button_port_clock_on()
 {
   // turn on the button port clock
-  // TODO
+  uint32_t *p = ( uint32_t *) 0x40023830;
+  set_bit(p, 0);
 }
 
 void led_port_clock_on()
 {
   // turn on the led port clock
-  // TODO
+  uint32_t *p = ( uint32_t *) 0x40023830;
+  set_bit(p, 3);
 }
 
 void button_init()
 {
   // init the button
-  // TODO
+  uint32_t *p = ( uint32_t *) 0x40020000;
+  reset_two_bits(p, 0);
+  
+  uint32_t *k = ( uint32_t *) 0x4002000C;
+  reset_two_bits(k, 0);
 }
 
 void led_init()
 {
   // init leds
-  // TODO
+  uint32_t *a = ( uint32_t *) 0x40020C00;
+  for (int i = 24; i < 31; i+=2){
+    set_two_bits_to(a, i, 1);
+  }
+  
+  uint32_t *b = ( uint32_t *) 0x40020C04;
+  for (int i = 24; i < 31; i+=2){
+    set_two_bits_to(b, i, 1);
+  }
+  
+  uint32_t *c = ( uint32_t *) 0x40020C08;
+  for (int i = 24; i < 31; i+=2){
+    set_two_bits_to(c, i, 1);
+  }
+  
+  uint32_t *d = ( uint32_t *) 0x40020C0C;
+  for (int i = 24; i < 31; i+=2){
+    set_two_bits_to(d, i, 1);
+  }
 }
 
 void led_on(uint8_t i)
 {
   // turn led number i on
-  // TODO
+  uint16_t *p = ( uint16_t *) 0x40020C18;
+  set_bit_16(p, 12+i);
 }
 
 void led_off(uint8_t i)
 {
   // turn led number i off
-  // TODO
+  uint16_t *p = ( uint16_t *) 0x40020C1A;
+  set_bit_16(p, 12+i);
 }
 
 uint8_t read_button()
 {
   // get button state
-  // TODO
+  volatile uint16_t *p = ( uint16_t *) 0x40020010;
+  return (*p % 2);
 }
 
 void delay()
 {
   // hardcoded delay
-  // TODO
+  volatile int i = 1000000;
+  while (i--){
+  }
 }
 
 /* USER CODE END 4 */
