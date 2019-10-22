@@ -33,7 +33,7 @@ int ResetTwoBits(int x, int p)
 
 int SetBit(int x, int p)
 {
-    return x|= (1UL << p);
+    return x |= (1UL << p);
 }
 
 int SetTwoBitsTo(int x, int p, int n)
