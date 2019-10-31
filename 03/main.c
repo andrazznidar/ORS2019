@@ -98,10 +98,10 @@ void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
 
-void ClockOn(GPIO_device * GPIO_addr);
+void clock_on(GPIO_device * GPIO_addr);
 void init_GPIO(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t Mode, uint32_t PUPD, uint32_t OType, uint32_t OSpeed);
-void GPIO_Output(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val);
-uint32_t GPIO_Read(GPIO_device * GPIO_addr, uint32_t Pin);
+void GPIO_pin_write(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val);
+uint32_t GPIO_pin_read(GPIO_device * GPIO_addr, uint32_t Pin);
 void delay(void);
 
 /* USER CODE END PFP */
@@ -209,7 +209,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 
 // function for turning on a particular GPIO (enables the port clock)
-void ClockOn(GPIO_device * GPIO_addr)
+void clock_on(GPIO_device * GPIO_addr)
 {
     TODO
 }
@@ -220,14 +220,14 @@ void init_GPIO(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t Mode, uint32_t PU
     TODO
 }
 
-// function for setting the value of an output GPIO
-void GPIO_Output(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val) 
+// function for setting the value of an output GPIO pin
+void GPIO_pin_write(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val) 
 {
     TODO
 }
 
-// function for reading the value of an input GPIO
-uint32_t GPIO_Read(GPIO_device * GPIO_addr, uint32_t Pin)
+// function for reading the value of an input GPIO pin
+uint32_t GPIO_pin_read(GPIO_device * GPIO_addr, uint32_t Pin)
 {
     TODO
 }
