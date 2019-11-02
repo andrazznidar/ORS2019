@@ -147,10 +147,6 @@ int main(void)
 
     // turn on led's GPIO (leds are on PD12, PD13, PD14, PD15)
     clock_on(GPIODd);
-    /*for(int i = 12; i < 16; i++){
-        (GPIODd)+(i*64)->MODER = OUT;
-        (GPIODd)+(i*64)->PUPDR = NO_PULL;
-    }*/
 
     // init button
     init_GPIO(GPIOAd, 0, IN, NO_PULL, PUSH_PULL, S2MHz);
