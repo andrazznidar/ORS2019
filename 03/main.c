@@ -224,7 +224,6 @@ void SystemClock_Config(void)
 void clock_on(GPIO_device * GPIO_addr)
 {
     *RCC_AHB1ENR |= (1UL << (((unsigned long)GPIO_addr-(unsigned long)GPIOAd)/1024));
-
 }
 
 // function for initializing GPIOs
