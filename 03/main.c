@@ -144,8 +144,6 @@ int main(void)
 
     // turn on button's GPIO (button is on PA0)
     clock_on(GPIOAd);
-    /*GPIOAd->MODER = IN;
-    GPIOAd->PUPDR = NO_PULL;*/
 
     // turn on led's GPIO (leds are on PD12, PD13, PD14, PD15)
     clock_on(GPIODd);
