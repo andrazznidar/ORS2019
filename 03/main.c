@@ -33,15 +33,15 @@
 // a struct that defines a GPIO device (maps GPIOs memory structure)
 typedef struct
 {
-    uint32_t TODO
-    uint32_t TODO
-    uint32_t TODO
-    uint32_t TODO
-    uint32_t TODO
-    uint32_t TODO
-    uint16_t TODO
-    uint16_t TODO
-} GPIO_device; 
+    uint32_t MODER;
+    uint32_t OTYPER;
+    uint32_t OSPEEDR;
+    uint32_t PUPDR;
+    uint32_t IDR;
+    uint32_t ODR;
+    uint16_t BSR;
+    uint16_t BRR;
+} GPIO_device;
 
 /* USER CODE END PTD */
 
@@ -50,36 +50,38 @@ typedef struct
 /* USER CODE BEGIN PD */
 
 // constants for storing addresses of GPIOs
-#define GPIOAd TODO
-#define GPIOBd TODO
-#define GPIOCd TODO
-#define GPIODd TODO
-#define GPIOEd TODO
-#define GPIOFd TODO
-#define GPIOGd TODO
-#define GPIOHd TODO
-#define GPIOId TODO
+#define GPIOAd ((GPIO_device *) 0x40020000)
+#define GPIOBd ((GPIO_device *) 0x40020400)
+#define GPIOCd ((GPIO_device *) 0x40020800)
+#define GPIODd ((GPIO_device *) 0x40020C00)
+#define GPIOEd ((GPIO_device *) 0x40021000)
+#define GPIOFd ((GPIO_device *) 0x40021400)
+#define GPIOGd ((GPIO_device *) 0x40021800)
+#define GPIOHd ((GPIO_device *) 0x40021C00)
+#define GPIOId ((GPIO_device *) 0x40022000)
+
+#define RCC_AHB1ENR ((uint32_t *) 0x40023830)
 
 // MODE constants
-#define IN TODO
-#define OUT TODO
-#define AF TODO
-#define ANALOG TODO
+#define IN 0x00
+#define OUT 0x01
+#define AF 0x10
+#define ANALOG 0x11
 
 // PUPD constants
-#define NO_PULL TODO
-#define PULL_UP TODO
-#define PULL_DOWN TODO
+#define NO_PULL 0x00
+#define PULL_UP 0x01
+#define PULL_DOWN 0x10
 
 // OTYPE constants
-#define PUSH_PULL TODO
-#define OPEN_DRAIN TODO
+#define PUSH_PULL 0x0
+#define OPEN_DRAIN 0x1
 
 // OSPEED constants
-#define S2MHz TODO
-#define S25MHz TODO
-#define S50MHz TODO
-#define S100MHz TODO
+#define S2MHz 0x00
+#define S25MHz 0x01
+#define S50MHz 0x10
+#define S100MHz 0x11
 
 /* USER CODE END PD */
 
@@ -141,16 +143,24 @@ int main(void)
     /* USER CODE BEGIN 2 */
 
     // turn on button's GPIO (button is on PA0)
-    TODO
+    clock_on(GPIOAd);
+    /*GPIOAd->MODER = IN;
+    GPIOAd->PUPDR = NO_PULL;*/
 
     // turn on led's GPIO (leds are on PD12, PD13, PD14, PD15)
-    TODO
+    clock_on(GPIODd);
+    /*for(int i = 12; i < 16; i++){
+        (GPIODd)+(i*64)->MODER = OUT;
+        (GPIODd)+(i*64)->PUPDR = NO_PULL;
+    }*/
 
     // init button
-    TODO
+    init_GPIO(GPIOAd, 0, IN, NO_PULL, PUSH_PULL, S2MHz);
 
     // init leds
-    TODO
+    for(int i = 12; i < 16; i++){
+        init_GPIO(GPIODd, i, OUT, NO_PULL, PUSH_PULL, S2MHz);
+    }
 
     /* USER CODE END 2 */
 
@@ -159,7 +169,15 @@ int main(void)
     while (1)
     {
         // read button and trigger led sequence
-        TODO
+        if(GPIO_pin_read(GPIOAd, 0) == 1){
+            for(int i = 12; i < 16; i++){
+                GPIO_pin_write(GPIODd, i, 1);
+                delay();
+            }
+            for(int i = 12; i < 16; i++){
+                GPIO_pin_write(GPIODd, i, 0);
+            }
+        }
 
         /* USER CODE END WHILE */
 
@@ -177,11 +195,11 @@ void SystemClock_Config(void)
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-    /** Configure the main internal regulator output voltage 
+    /** Configure the main internal regulator output voltage
     */
     __HAL_RCC_PWR_CLK_ENABLE();
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-    /** Initializes the CPU, AHB and APB busses clocks 
+    /** Initializes the CPU, AHB and APB busses clocks
     */
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
     RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -191,7 +209,7 @@ void SystemClock_Config(void)
     {
         Error_Handler();
     }
-    /** Initializes the CPU, AHB and APB busses clocks 
+    /** Initializes the CPU, AHB and APB busses clocks
     */
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                                                             |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -211,25 +229,34 @@ void SystemClock_Config(void)
 // function for turning on a particular GPIO (enables the port clock)
 void clock_on(GPIO_device * GPIO_addr)
 {
-    TODO
+    *RCC_AHB1ENR |= (1UL << (((unsigned long)GPIO_addr-(unsigned long)GPIOAd)/1024));
+
 }
 
 // function for initializing GPIOs
 void init_GPIO(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t Mode, uint32_t PUPD, uint32_t OType, uint32_t OSpeed)
 {
-    TODO
+    GPIO_addr->MODER = (GPIO_addr->MODER & ~(3 << Pin*2))|(Mode << Pin*2);
+    GPIO_addr->PUPDR = (GPIO_addr->PUPDR & ~(3 << Pin*2))|(PUPD << Pin*2);
+    GPIO_addr->OTYPER  = (GPIO_addr->OTYPER & ~(1UL << Pin)) | (OType << Pin);
+    GPIO_addr->OSPEEDR = (GPIO_addr->OSPEEDR & ~(3 << Pin*2))|(OSpeed << Pin*2);
 }
 
 // function for setting the value of an output GPIO pin
-void GPIO_pin_write(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val) 
+void GPIO_pin_write(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t val)
 {
-    TODO
+    if(val == 1){
+         GPIO_addr->BSR |= 1UL << Pin;
+    }
+    else{
+        GPIO_addr->BRR |= 1UL << Pin;
+    }
 }
 
 // function for reading the value of an input GPIO pin
 uint32_t GPIO_pin_read(GPIO_device * GPIO_addr, uint32_t Pin)
 {
-    TODO
+   return (GPIO_addr->IDR >> Pin) & 1U;
 }
 
 // hardcoded delay
