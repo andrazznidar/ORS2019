@@ -63,25 +63,25 @@ typedef struct
 #define RCC_AHB1ENR ((uint32_t *) 0x40023830)
 
 // MODE constants
-#define IN 0x00
-#define OUT 0x01
-#define AF 0x10
-#define ANALOG 0x11
+#define IN 0x0
+#define OUT 0x1
+#define AF 0x2
+#define ANALOG 0x3
 
 // PUPD constants
-#define NO_PULL 0x00
-#define PULL_UP 0x01
-#define PULL_DOWN 0x10
+#define NO_PULL 0x0
+#define PULL_UP 0x1
+#define PULL_DOWN 0x2
 
 // OTYPE constants
 #define PUSH_PULL 0x0
 #define OPEN_DRAIN 0x1
 
 // OSPEED constants
-#define S2MHz 0x00
-#define S25MHz 0x01
-#define S50MHz 0x10
-#define S100MHz 0x11
+#define S2MHz 0x0
+#define S25MHz 0x1
+#define S50MHz 0x2
+#define S100MHz 0x3
 
 /* USER CODE END PD */
 
