@@ -223,7 +223,7 @@ void SystemClock_Config(void)
 // function for turning on a particular GPIO (enables the port clock)
 void clock_on(GPIO_device * GPIO_addr)
 {
-    *RCC_AHB1ENR |= (1UL << (((unsigned long)GPIO_addr-(unsigned long)GPIOAd)/1024));
+    *RCC_AHB1ENR |= (1UL << (((unsigned long)GPIO_addr-(unsigned long)GPIOAd)/0x400));
 }
 
 // function for initializing GPIOs
@@ -231,7 +231,7 @@ void init_GPIO(GPIO_device * GPIO_addr, uint32_t Pin, uint32_t Mode, uint32_t PU
 {
     GPIO_addr->MODER = (GPIO_addr->MODER & ~(3 << Pin*2))|(Mode << Pin*2);
     GPIO_addr->PUPDR = (GPIO_addr->PUPDR & ~(3 << Pin*2))|(PUPD << Pin*2);
-    GPIO_addr->OTYPER  = (GPIO_addr->OTYPER & ~(1UL << Pin)) | (OType << Pin);
+    GPIO_addr->OTYPER  = (GPIO_addr->OTYPER & ~(1UL << Pin))|(OType << Pin);
     GPIO_addr->OSPEEDR = (GPIO_addr->OSPEEDR & ~(3 << Pin*2))|(OSpeed << Pin*2);
 }
 
