@@ -89,6 +89,28 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  
+  GPIO_InitTypeDef button_init_structure;
+  button_init_structure.Pin = GPIO_PIN_0;
+  button_init_structure.Mode = GPIO_MODE_INPUT;
+  button_init_structure.Pull = GPIO_NOPULL;
+  button_init_structure.Speed = GPIO_SPEED_FREQ_LOW;
+
+  HAL_GPIO_Init(GPIOA, &button_init_structure);
+
+
+  GPIO_InitTypeDef led_init_structure;
+  led_init_structure.Pin = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+  led_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
+  led_init_structure.Pull = GPIO_NOPULL;
+  led_init_structure.Speed = GPIO_SPEED_FREQ_LOW;
+
+  HAL_GPIO_Init(GPIOD, &led_init_structure);
+  
+  
+  int stevec = 0;
 
   /* USER CODE END 2 */
 
@@ -96,6 +118,53 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1){
+      stevec++;
+      HAL_Delay(1000);
+      if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == 1){
+        stevec = 0;
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+        HAL_Delay(1000);
+      }
+      
+      if(((stevec >> 0) & 1U) == 1){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+      }
+      
+      if(((stevec >> 0) & 1U) == 0){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+      }
+      
+      
+      if(((stevec >> 1) & 1U) == 1){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+      }
+      
+      if(((stevec >> 1) & 1U) == 0){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+      }
+      
+      
+      if(((stevec >> 2) & 1U) == 1){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+      }
+      
+      if(((stevec >> 2) & 1U) == 0){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+      }
+      
+      
+      if(((stevec >> 3) & 1U) == 1){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+      }
+      
+      if(((stevec >> 3) & 1U) == 0){
+        HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+      }
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
