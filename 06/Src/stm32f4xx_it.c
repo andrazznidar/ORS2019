@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+volatile int stevec = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -185,6 +185,14 @@ void SysTick_Handler(void)
 
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
+  if(stevec <= 0){
+	  stevec = 0;
+	  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+  }
+  else{
+	  HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+  }
+  stevec--;
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
@@ -201,21 +209,17 @@ void SysTick_Handler(void)
 volatile int counter = 0;
 void intToLED(int);
 
+
 void EXTI0_IRQHandler() {
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0) != 0)
 	{
-		for(int i = 0; i < (500); i++){
-			SysTick_Handler();
-		}
 		if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) != 0)
 		{
 			counter++;
 			intToLED(counter);
+			stevec = 200;
 		}
 
-		for(int i = 0; i < (500); i++){
-					SysTick_Handler();
-				}
 		__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
 	}
 }
