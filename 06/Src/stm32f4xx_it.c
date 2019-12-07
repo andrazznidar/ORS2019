@@ -191,8 +191,9 @@ void SysTick_Handler(void)
   }
   else{
 	  HAL_NVIC_DisableIRQ(EXTI0_IRQn);
+	  stevec--;
   }
-  stevec--;
+  
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
