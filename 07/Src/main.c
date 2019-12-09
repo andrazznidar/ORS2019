@@ -24,13 +24,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-TIM_HandleTypeDef timer;
-TIM_HandleTypeDef timer2;
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+TIM_HandleTypeDef timer;
+TIM_HandleTypeDef timer2;
 
 /* USER CODE END PTD */
 
@@ -92,6 +92,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   GPIO_InitTypeDef led_init_structure;
@@ -151,21 +152,18 @@ int main(void)
   HAL_TIM_PWM_Start(&timer, TIM_CHANNEL_4);
 
 
-
   timer2.Instance = TIM3;
   timer2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  timer2.Init.Period = 100-1; // ARR
+  timer2.Init.Period = 50-1; // ARR
   timer2.Init.Prescaler = 16000-1;
+  
   HAL_TIM_Base_Init(&timer2);
-
   HAL_TIM_Base_Start(&timer2);
 
   __HAL_TIM_ENABLE_IT(&timer2, TIM_IT_UPDATE);
 
   HAL_NVIC_SetPriority(TIM3_IRQn, 0, 1);
   HAL_NVIC_EnableIRQ(TIM3_IRQn);
-
-
 
   /* USER CODE END 2 */
 
