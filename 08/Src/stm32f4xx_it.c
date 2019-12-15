@@ -28,6 +28,9 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 
+extern UART_HandleTypeDef uart;
+extern uint8_t readBuffer[];
+
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -42,6 +45,15 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+
+int stevec = 500;
+int posiljka = 0;
+
+uint8_t bufferS1[] = "S1";
+uint8_t bufferS2[] = "S2";
+
+uint8_t bufferR1[] = "R1";
+uint8_t bufferR2[] = "R2";
 
 /* USER CODE END PV */
 
@@ -186,6 +198,31 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
+	
+  HAL_UART_Receive_IT(&uart, readBuffer, 2);
+  if(stevec <= 0){
+	  if(posiljka == 0){
+		  HAL_UART_Transmit_IT(&uart, bufferS1, sizeof(bufferS1));
+	  }
+
+	  if(posiljka == 1){
+		  HAL_UART_Transmit_IT(&uart, bufferS2, sizeof(bufferS2));
+	  }
+
+	  if(posiljka == 2){
+		  HAL_UART_Transmit_IT(&uart, bufferR1, sizeof(bufferR1));
+	  }
+
+	  if(posiljka == 3){
+		  HAL_UART_Transmit_IT(&uart, bufferR2, sizeof(bufferR2));
+	  }
+
+	  posiljka = (posiljka + 1) % 4;
+	  stevec = 500;
+  }
+  else{
+	  stevec--;
+  }
 
   /* USER CODE END SysTick_IRQn 1 */
 }
