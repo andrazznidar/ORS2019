@@ -157,20 +157,6 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-	  HAL_UART_Receive_IT(&uart, readBuffer, 2);
-
-	  /*HAL_UART_Transmit_IT(&uart, bufferS1, sizeof(bufferS1));
-	  HAL_Delay(500);
-
-	  HAL_UART_Transmit_IT(&uart, bufferS2, sizeof(bufferS2));
-	  HAL_Delay(500);
-
-	  HAL_UART_Transmit_IT(&uart, bufferR1, sizeof(bufferR1));
-	  HAL_Delay(500);
-
-	  HAL_UART_Transmit_IT(&uart, bufferR2, sizeof(bufferR2));
-	  HAL_Delay(500);*/
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
