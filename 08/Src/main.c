@@ -101,7 +101,7 @@ int main(void)
   uart.Instance = UART4;
   uart.Init.BaudRate = 115200;
   uart.Init.WordLength = UART_WORDLENGTH_8B;
-  uart.Init.StopBits = UART_STOPBITS_2;
+  uart.Init.StopBits = UART_STOPBITS_1;
   uart.Init.Parity = UART_PARITY_NONE;
   uart.Init.Mode = UART_MODE_TX_RX;
   uart.Init.HwFlowCtl = UART_HWCONTROL_NONE;
@@ -141,13 +141,6 @@ int main(void)
   led_init_structure.Speed = GPIO_SPEED_FREQ_LOW;
 
   HAL_GPIO_Init(GPIOD, &led_init_structure);
-
-
-  uint8_t bufferS1[] = "S1";
-  uint8_t bufferS2[] = "S2";
-
-  uint8_t bufferR1[] = "R1";
-  uint8_t bufferR2[] = "R2";
 
   /* USER CODE END 2 */
 
