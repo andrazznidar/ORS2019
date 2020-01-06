@@ -58,6 +58,7 @@ int8_t read_y();
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int8_t array[2];
 /* USER CODE END 0 */
 
 /**
@@ -88,6 +89,52 @@ int main(void)
     init_spi();
     init_lis();
 
+
+    __HAL_RCC_UART4_CLK_ENABLE();
+
+    UART_HandleTypeDef uart;
+    uart.Instance = UART4;
+    uart.Init.BaudRate = 115200;
+    uart.Init.WordLength = UART_WORDLENGTH_8B;
+    uart.Init.StopBits = UART_STOPBITS_1;
+    uart.Init.Parity = UART_PARITY_NONE;
+    uart.Init.Mode = UART_MODE_TX;
+    uart.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    HAL_UART_Init(&uart);
+
+
+
+    //ptr = (int8_t*) malloc (2 * sizof(int8_t));
+
+
+    //HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
+    //HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+
+
+    __DMA1_CLK_ENABLE();
+    //__DMA2_CLK_ENABLE();
+
+
+    DMA_HandleTypeDef mojDMA2;
+    mojDMA2.Instance = DMA1_Stream4;
+    mojDMA2.Init.Channel = DMA_CHANNEL_4;
+    mojDMA2.Init.Mode = DMA_CIRCULAR;
+    mojDMA2.Init.Priority = DMA_PRIORITY_HIGH;
+    mojDMA2.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    mojDMA2.Init.FIFOMode = DMA_FIFOMODE_DISABLE;
+    mojDMA2.Init.PeriphInc = DMA_PINC_DISABLE;
+    mojDMA2.Init.MemInc = DMA_MINC_ENABLE;
+
+	HAL_DMA_Init(&mojDMA2);
+
+	SET_BIT(UART4->CR3, USART_CR3_DMAT);
+
+	//HAL_DMA_Start(&mojDMA2, (uint32_t)&USART1->DR, (uint32_t)buff, 10); //sprejemanje
+	HAL_DMA_Start(&mojDMA2, (uint32_t)array, (uint32_t)&UART4->DR, 2);
+
+
+
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -97,6 +144,7 @@ int main(void)
     {
         // read x
         int8_t x = read_x();
+        array[0] = x;
 
         // set x
         if (x > 0) {
@@ -109,6 +157,7 @@ int main(void)
 
         // read y
         int8_t y = read_y();
+        array[1] = y;
 
         // set y
         if (y > 0) {
